@@ -1,11 +1,11 @@
-# Celo Marketplace Dapp
-![](https://github.com/dacadeorg/celo-development-101/blob/main/content/gifs/celo_trailer_02.gif)
+# Celo FashionPlace Dapp
 
 ## Description
 This is a very simple marketplace dapp where users can:
-* See products hosted on the Celo Blockchain
-* Purchase products with cUSD and pay the owner
-* Add your own products to the dapp
+* See fashion houses hosted on the Celo Blockchain
+* Book fashion services with cUSD and pay the owner
+* Add your own fashion house to the dapp
+* Fashion houses can change availability
 
 ## Live Demo
 [Marketplace Dapp](https://dacadeorg.github.io/celo-marketplace-dapp/)
@@ -19,9 +19,9 @@ This is a very simple marketplace dapp where users can:
 4. Switch to the alfajores testnet in the CeloExtensionWallet.
 
 ### Test
-1. Create a product.
+1. Create a fashion house.
 2. Create a second account in your extension wallet and send them cUSD tokens.
-3. Buy product with secondary account.
+3. Book fashion services with secondary account.
 4. Check if balance of first account increased.
 
 
