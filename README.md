@@ -4,7 +4,7 @@
 This is a very simple marketplace dapp where users can:
 * See fashion houses hosted on the Celo Blockchain
 * Book fashion services with cUSD and pay the owner
-* Add your own fashion house to the dapp
+* Add your fashion house to the dapp
 * Fashion houses can change availability
 
 ## Live Demo
