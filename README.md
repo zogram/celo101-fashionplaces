@@ -1,14 +1,14 @@
 # Celo FashionPlace Dapp
 
 ## Description
-This is a very simple marketplace dapp where users can:
+This is a very simple fashion place dapp where users can:
 * See fashion houses hosted on the Celo Blockchain
 * Book fashion services with cUSD and pay the owner
 * Add your fashion house to the dapp
 * Fashion houses can change availability
 
 ## Live Demo
-[Marketplace Dapp](https://dacadeorg.github.io/celo-marketplace-dapp/)
+[Fashionplace Dapp](https://zogram.github.io/celo101-fashionplaces/)
 
 ## Usage
 
