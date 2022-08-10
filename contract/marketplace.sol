@@ -40,6 +40,12 @@ contract fashionMarketplace {
     // map each fashion place to an unsigned integer
     mapping (uint => FashionPlace) internal fashionPlaces;
 
+    //Modifier to check if the caller is the owner
+    modifier onlyOwner(uint _index){
+        require(msg.sender == fashionPlaces[_index].owner, "Only the owner can access this functionality");
+        _;
+    }
+
     // write new fashion place to the contract
     function writeFashionPlace(
         string memory _name,
@@ -84,6 +90,9 @@ contract fashionMarketplace {
 
     // function to order or book a fashion place
     function orderFashionPlace(uint _index) public payable  {
+        //Checks if the fashion place is available
+        require(fashionPlaces[_index].available, "fashion place not available");
+        require(msg.sender != fashionPlaces[_index].owner, "Owner can't buy fashion place");
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,
@@ -101,8 +110,12 @@ contract fashionMarketplace {
     }
 
     // set fashion place available or not
-    function availability(uint _index) public {
-        require(msg.sender == fashionPlaces[_index].owner, "not owner of account");
+    function toggleAvailability(uint _index) public onlyOwner(_index){
         fashionPlaces[_index].available = !fashionPlaces[_index].available;
+    }
+
+    //Change the price of the fashion place
+    function changePrice(uint _index, uint _price) public onlyOwner(_index){
+        fashionPlaces[_index].price = _price;
     }
 }
