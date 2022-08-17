@@ -12,8 +12,6 @@ const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 let kit 
 let contract
 let fashionPlaces = []
-let boolAvailability
-
 // function to connect celo wallet
 const connectCeloWallet = async function () {
   if (window.celo) {
@@ -73,7 +71,7 @@ const getFashionPlaces = async function() {
         description: p[3],
         location: p[4],
         price: new BigNumber(p[5]),
-        contractAvailability: p[6],
+        availability: p[6],
       })
     })
     _fashionPlaces.push(_fashionPlace)
@@ -95,20 +93,16 @@ function renderFashionPlaces() {
 
 // template for fashion place UI
 function fashionPlaceTemplate(_fashionPlace) {
-  let availability
   let radioButttonId
   let checked
   let enableBookBtn
-  boolAvailability = _fashionPlace.contractAvailability;
 
   // condition to check availability of fashion place, this determine what is displayed on the UI
-  if(boolAvailability) {
-    availability = 'Available'
+  if(_fashionPlace.availability) {
     radioButttonId = "flexSwitchCheckChecked"
     checked="checked"
     enableBookBtn= ""
   } else {
-    availability = 'Not available'
     radioButttonId = "flexSwitchCheckChecked"
     checked=""
     enableBookBtn='pe-none'
@@ -118,7 +112,7 @@ function fashionPlaceTemplate(_fashionPlace) {
     <div class="card mb-4">
       <img class="card-img-top" src="${_fashionPlace.image}" alt="...">
       <div class="position-absolute top-0 end-0 bg-warning mt-4 px-2 py-1 rounded-start">
-        ${availability}
+        ${_fashionPlace.availability? "Available" : "Not available"}
       </div>
       <div class="card-body text-left p-4 position-relative">
         <div class="translate-middle-y position-absolute top-0">
@@ -132,21 +126,17 @@ function fashionPlaceTemplate(_fashionPlace) {
           <i class="bi bi-geo-alt-fill"></i>
           <span>${_fashionPlace.location}</span>
         </p>
-        <div class="form-check form-switch"  id=${
-          _fashionPlace.index
-        }>
-          <input class="form-check-input" type="checkbox" id=${radioButttonId} data-id=${
-            _fashionPlace.index
-          } ${checked}>
-          <label class="form-check-label" for=${radioButttonId}>Availabilty</label>
-        </div>
-        <div class="d-grid gap-2 ${enableBookBtn}">
-          <a class="btn btn-lg btn-outline-dark bookBtn fs-6 p-3" id=${
-            _fashionPlace.index
-          }>
-            Book for ${_fashionPlace.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
-          </a>
-        </div>
+       ${kit.defaultAccount === _fashionPlace.owner? 
+        ` <div class="form-check form-switch"  id=${_fashionPlace.index}>
+        <input class="form-check-input" type="checkbox" id=${radioButttonId} data-id=${_fashionPlace.index} ${checked}>
+        <label class="form-check-label" for=${radioButttonId}>Availabilty</label>
+        </div>` : "" }
+        ${(kit.defaultAccount !== _fashionPlace.owner && _fashionPlace.availability)?
+           `<div class="d-grid gap-2 ${enableBookBtn}">
+           <a class="btn btn-lg btn-outline-dark bookBtn fs-6 p-3" id=${_fashionPlace.index}>
+             Book for ${_fashionPlace.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
+           </a>
+         </div>` : "" }
       </div>
     </div>
   `
@@ -208,7 +198,11 @@ document
       .shiftedBy(ERC20_DECIMALS)
       .toString()
     ]
-    notification(`⌛ Adding "${params[0]}"...`)
+    if(params.length !== 5){
+      notification("Please fill in all the required fields");
+      return;
+    }
+    notification(`⌛ Adding "${params[0]}"...`);
     try {
       const result = await contract.methods
         .writeFashionPlace(...params)
@@ -248,7 +242,6 @@ document
   document.querySelector("#fashionPlace").addEventListener("click", async (e) => {
     if (e.target.className.includes("form-check-input")) {
       const index = e.target.dataset.id
-
       notification("⌛ changing availability...")
       try {
         const availability = await contract.methods
